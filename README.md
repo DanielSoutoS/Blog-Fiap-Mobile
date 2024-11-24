@@ -6,7 +6,7 @@ Este repositório contém o projeto Front-end Challenge da pós Tech Fiap+Alura.
 
   
 
-Foi desenvolvido em React-Native utilizando. Abaixo, você encontrará um guia passo a passo para abrir o projeto em seu ambiente local.
+Foi desenvolvido em React-Native. Abaixo, você encontrará um guia passo a passo para abrir o projeto em seu ambiente local.
 
   
 
