@@ -28,13 +28,15 @@ const Menu = () => {
       <Modal
         transparent
         visible={visible}>
-          <SafeAreaView style={ styles.modalContainer } onTouchStart={() => setVisible(false)}>
-            <TouchableOpacity onPress={() => navigation.navigate('Home')}> 
-              <Text style={styles.menuItem}>Home</Text> 
-            </TouchableOpacity> 
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}> 
-              <Text style={styles.menuItem}>Login</Text> 
-            </TouchableOpacity>
+          <SafeAreaView style={{ flex: 1 }}  onTouchStart={() => setVisible(false)}>
+            <View style={ styles.modalContainer }>
+              <TouchableOpacity onPress={() => navigation.navigate('Home')}> 
+                <Text style={styles.menuItem}>Home</Text> 
+              </TouchableOpacity> 
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}> 
+                <Text style={styles.menuItem}>Login</Text> 
+              </TouchableOpacity>
+            </View>
           </SafeAreaView>
       </Modal>
     </View>
@@ -58,6 +60,13 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: '#000',
+    borderBottomEndRadius: 4,
+    borderBottomStartRadius: 4,
+    position: 'absolute',
+    minWidth: 150,
+    top: 60,
+    right: 0,
+
   },
   menuItem: {
     fontSize: 16,
