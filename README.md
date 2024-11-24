@@ -25,7 +25,7 @@ Antes será necessário:
 :white_check_mark: Instalar o [Expo Go](https://expo.dev/go);
 
 
-:white_check_mark: Recomendado ter o emulador instalado no seu computador. Sugestões: [Android Studion](https://docs.expo.dev/workflow/android-studio-emulator/) para Android e/ou [Xcode](https://developer.apple.com/xcode/) para IOS;
+:white_check_mark: Recomendado ter o emulador instalado no seu computador. Sugestões: [Android Studio](https://docs.expo.dev/workflow/android-studio-emulator/) para Android e/ou [Xcode](https://developer.apple.com/xcode/) para IOS;
 
   
 :white_check_mark: Iniciar o MySQL: dentro do MySQL e criar um Schema com o nome fiap (CREATE DATABASE fiap;), assim que rodar o projeto back-end as tabelas serão criadas automaticamente;
