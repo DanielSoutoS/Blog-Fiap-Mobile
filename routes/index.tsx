@@ -1,10 +1,15 @@
-import { NavigationContainer } from '@react-navigation/native'
-import { AppRoutes } from './app.routes'
+import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
+import { AppRoutes } from './app.routes';
+import Menu from '../components/Menu';
 
 export function Routes(){
     return(
-        <NavigationContainer independent={true}>
-            <AppRoutes/>
-        </NavigationContainer>
+        <NavigationIndependentTree>
+            <NavigationContainer>
+                <Menu />
+                <AppRoutes/>
+            </NavigationContainer>
+        </NavigationIndependentTree>
+        
     )
 }
