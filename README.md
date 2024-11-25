@@ -42,7 +42,7 @@ Para isso acesse o projeto back-end no link [Projeto Back-end: Fiap Tech Blog](h
 
 ```bash
 
-git  clone  https://github.com/oPedroFlores/fiap-project.git
+git  clone  https://github.com/DanielSoutoS/Blog-Fiap-Mobile.git
 
 ```
 
@@ -64,7 +64,7 @@ Clone este repositório para sua máquina local. Para clonar, clique no botão "
 
 ```bash
 
-git  clone  https://github.com/DanielSoutoS/Blog-Fiap-Mobile
+git  clone  https://github.com/DanielSoutoS/Blog-Fiap-Mobile.git
 
 ```
 
@@ -112,7 +112,7 @@ npx expo start
 
   
 
-Assim o projeto será exibido no seu navegador no endereço [http://localhost:8081](http://localhost:8081). É possível acessá-lo também clicando (control + click) no link ao lado, disponível também no terminal do front-end.
+Assim o projeto será exibido no seu navegador no endereço [http://localhost:8081](http://localhost:8081).
 
   
 
@@ -126,7 +126,7 @@ Antes de prosseguir, certifique-se de que o back-end esteja rodando corretamente
 
   
 
-Ao abrir o projeto no seu navegador no endereço [http://localhost:3000](http://localhost:3000)
+Ao abrir o projeto no seu navegador no endereço [http://localhost:8081](http://localhost:8081) ou no emulador de sua preferência.
 
   
 
@@ -162,7 +162,7 @@ Com esta alteração, será possível realizar o cadastro de Posts!
 
   
 
-Ao retornar ao endereço [http://localhost:3000](http://localhost:3000) será possível visualizar, bem como acessar a tab 'Cadastrar Post'
+Ao retornar ao endereço [http://localhost:8081](http://localhost:8081) será possível visualizar, bem como acessar a tab 'Cadastrar Post'
 
 - Crie um título (Title) bem como um corpo de texto (Body)
 
