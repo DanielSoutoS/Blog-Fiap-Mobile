@@ -42,7 +42,7 @@ Para isso acesse o projeto back-end no link [Projeto Back-end: Fiap Tech Blog](h
 
 ```bash
 
-git  clone  https://github.com/DanielSoutoS/Blog-Fiap-Mobile.git
+git  clone  git  clone  https://github.com/oPedroFlores/fiap-project.git
 
 ```
 
