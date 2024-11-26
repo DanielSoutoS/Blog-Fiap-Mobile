@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getPostById } from "../../ApiStructure";
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../../types';
 
 export interface postInicial {
   id: number;
@@ -24,6 +27,7 @@ export default function ViewPost() {
   const [loading, setLoading] = useState(true);
   const route = useRoute();
   const { post: postInicial } = route.params as { post: postInicial | any };
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     const fetchPostDetalhes = async () => {
@@ -63,7 +67,14 @@ export default function ViewPost() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <Icon name="arrow-left" style={styles.iconBack} />
+      </TouchableOpacity>
       <Text style={styles.titulo}>{post.title}</Text> 
+      <Text style={styles.writer}>
+        <Icon name="fountain-pen-tip" style={styles.iconWriter} />
+        {post.user.name}
+        </Text>
       <Text style={styles.conteudo}>{post.body}</Text>
     </View>
   );
@@ -74,12 +85,32 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  iconBack: {
+    color:"#2F4F4F",
+    fontSize: 26,
+    paddingBottom: 15,
+  },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
+    lineHeight: 32,
     marginBottom: 10,
+  },
+  writer: {
+    fontSize: 14,
+    lineHeight: 18,
+    color: '#006400',
+    marginBottom: 10,
+    marginTop: 10
+  },
+  iconWriter: {
+    fontSize: 14,
+    color: '#006400',
+    marginRight: 5
   },
   conteudo: {
     fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'justify',
   },
 });
