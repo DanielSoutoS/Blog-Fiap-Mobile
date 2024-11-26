@@ -34,15 +34,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
+    lineHeight: 24,
     fontWeight: 'bold',
   },
   body: {
     fontSize: 14,
+    lineHeight: 20,
     color: '#333',
     marginVertical: 5,
   },
   footer: {
     fontSize: 12,
+    lineHeight: 16,
     color: '#777',
   },
 });
