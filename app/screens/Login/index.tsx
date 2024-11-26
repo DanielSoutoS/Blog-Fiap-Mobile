@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { Text, View, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { userLogin } from '../../ApiStructure';
 
@@ -50,6 +50,10 @@ export default function Login() {
       />
       <Button title="Entrar" onPress={handleLogin} />
       {error && <Text style={{ color: 'red' }}>{error}</Text>}
+      <Text>Ainda não possui uma conta?</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <Text style={styles.linkText}>Clique aqui</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -61,6 +65,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#f5f5f5',
+  },
+  linkText: {
+    color: '#007bff',
+    marginTop: 10,
+    textDecorationLine: 'underline',
   },
   title: {
     fontSize: 24,
