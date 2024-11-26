@@ -74,7 +74,7 @@ export default function ViewPost() {
       <Text style={styles.writer}>
         <Icon name="fountain-pen-tip" style={styles.iconWriter} />
         {post.user.name}
-        </Text>
+      </Text>
       <Text style={styles.conteudo}>{post.body}</Text>
     </View>
   );
