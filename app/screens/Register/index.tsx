@@ -93,8 +93,8 @@ export default function Register() {
         editable={!loading}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading}>
-        {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.buttonText}>Registrar</Text>}
+      <TouchableOpacity style={styles.registerButton} onPress={handleSubmit} disabled={loading}>
+        {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.registerButtonText}>Registrar</Text>}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -127,20 +127,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
-  button: {
-    backgroundColor: '#007bff',
+  registerButton: {
+    backgroundColor: '#2f855a', // Verde escuro
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
+    marginTop: 20,
   },
-  buttonText: {
+  registerButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   linkText: {
     marginTop: 15,
     textAlign: 'center',
-    color: '#007bff',
+    color: '#2f855a', // Verde escuro
+    textDecorationLine: 'underline',
   },
   successMessage: {
     color: 'green',

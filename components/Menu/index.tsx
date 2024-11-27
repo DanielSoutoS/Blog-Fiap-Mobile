@@ -45,6 +45,9 @@ const Menu = () => {
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.menuItem}>Login</Text>
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Admin')}>
+                <Text style={styles.menuItem}>Admin</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </TouchableWithoutFeedback>
