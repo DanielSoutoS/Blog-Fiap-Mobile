@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Post as PostType } from '../../app/screens/Home/index';
 
 interface PostProps {
@@ -10,7 +11,10 @@ const Post: React.FC<PostProps> = ({ post }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{post.title}</Text>
-      <Text>{post.user.name}</Text>
+      <Text style={styles.writer}>
+        <Icon name="fountain-pen-tip" style={styles.iconWriter} />
+        {post.user.name}
+      </Text>
       <Text style={styles.body}>{post.body}</Text>
       <Text style={styles.footer}>
         {post.totalComments.count} comments •{' '}
@@ -32,17 +36,32 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 2,
   },
+  writer: {
+    fontSize: 14,
+    lineHeight: 18,
+    color: '#006400',
+    marginBottom: 10,
+    marginTop: 10
+  },
+  iconWriter: {
+    fontSize: 14,
+    color: '#006400',
+    marginRight: 5
+  },
   title: {
     fontSize: 18,
+    lineHeight: 24,
     fontWeight: 'bold',
   },
   body: {
     fontSize: 14,
+    lineHeight: 20,
     color: '#333',
     marginVertical: 5,
   },
   footer: {
     fontSize: 12,
+    lineHeight: 16,
     color: '#777',
   },
 });

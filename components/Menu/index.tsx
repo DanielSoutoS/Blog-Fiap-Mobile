@@ -8,7 +8,6 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../types';
@@ -45,6 +44,9 @@ const Menu = () => {
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.menuItem}>Login</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Admin')}>
+                <Text style={styles.menuItem}>Admin</Text>
               </TouchableOpacity>
             </View>
           </View>

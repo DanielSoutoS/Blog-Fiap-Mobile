@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { userLogin } from '../../ApiStructure';
 
@@ -48,11 +48,18 @@ export default function Login() {
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
-      <Button title="Entrar" onPress={handleLogin} />
-      {error && <Text style={{ color: 'red' }}>{error}</Text>}
-      <Text>Ainda não possui uma conta?</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.linkText}>Clique aqui</Text>
+      
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginButtonText}>Entrar</Text>
+      </TouchableOpacity>
+
+      {error && <Text style={{ color: 'red', marginTop: 10 }}>{error}</Text>}
+      
+      <TouchableOpacity 
+        style={styles.linkText} 
+        onPress={() => navigation.navigate('Register')}
+      >
+        <Text style={styles.linkText}>Ainda não possui uma conta? Clique aqui</Text>
       </TouchableOpacity>
     </View>
   );
@@ -65,11 +72,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#f5f5f5',
-  },
-  linkText: {
-    color: '#007bff',
-    marginTop: 10,
-    textDecorationLine: 'underline',
   },
   title: {
     fontSize: 24,
@@ -85,5 +87,36 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 10,
     backgroundColor: '#fff',
+  },
+  loginButton: {
+    backgroundColor: '#2f855a', // Verde escuro
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    marginTop: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+    textTransform: 'uppercase',
+  },
+  linkText: {
+    marginTop: 15,
+    textAlign: 'center',
+    color: '#2f855a', // Verde escuro
+    textDecorationLine: 'underline',
+  },
+  registerButtonText: {
+    color: '#2f855a', // Verde escuro
+    fontWeight: 'bold',
+    fontSize: 16,
+    textTransform: 'uppercase',
   },
 });
