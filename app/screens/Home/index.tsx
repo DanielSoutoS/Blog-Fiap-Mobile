@@ -6,25 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native'
 import { getPostsByPage } from '../../ApiStructure';
 import Post from '@/components/Home/Post';
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-    backgroundColor: '#fff',
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#1b4d3e'
-  },
-});
+
 
 export type RootStackParamList = {
   ViewPost: {
@@ -80,6 +62,11 @@ export function Home() {
     <View style={styles.container}>
       <Text style={styles.title}>Fiap Blog Home</Text>
       <SearchBar onSearch={handleSearch} />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('RegisterPost')} style={styles.newPostButton}>
+          <Text style={styles.buttonText}>Cadastrar Post</Text>
+        </TouchableOpacity>
+      </View>
       {posts.map((post) => (
         <TouchableOpacity key={post.id} onPress={() => handlePress(post)}>
           <Post key={post.id} post={post} />
@@ -88,3 +75,40 @@ export function Home() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingLeft: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#1b4d3e'
+  },
+  buttonContainer: {
+    display: 'flex',
+    alignItems: 'flex-end',
+  },
+  newPostButton: {
+    backgroundColor: '#2f855a', // Verde escuro
+    padding: 15,
+    borderRadius: 5,
+    maxWidth: 200,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});

@@ -4,6 +4,7 @@ import  Login  from '../app/screens/Login'
 import { Home } from '../app/screens/Home'
 import ViewPost from '@/app/screens/ViewPost'
 import Register from '@/app/screens/Register'
+import RegisterPost from '@/app/screens/RegisterPost'
 
 
 const { Navigator, Screen } = createNativeStackNavigator()
@@ -23,7 +24,10 @@ export function AppRoutes(){
                 component={ViewPost}/>                 
             <Screen
                 name="Register"
-                component={Register}/>       
+                component={Register}/>   
+            <Screen
+                name="RegisterPost"
+                component={RegisterPost}/>     
         </Navigator>
     )
 }
