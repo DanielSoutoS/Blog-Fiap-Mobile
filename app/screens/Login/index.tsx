@@ -59,7 +59,7 @@ export default function Login() {
         style={styles.linkText} 
         onPress={() => navigation.navigate('Register')}
       >
-        <Text style={styles.linkText}>Ainda não possui uma conta?</Text>
+        <Text style={styles.linkText}>Ainda não possui uma conta? Clique aqui</Text>
       </TouchableOpacity>
     </View>
   );
