@@ -1,6 +1,6 @@
 // Home.tsx
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { SearchBar } from '../../../components/Home/SearchBar'; // Ajuste o caminho se necessário
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native'
@@ -107,7 +107,7 @@ export function Home() {
       const data = await response.json();
       if (data.posts) setPosts(data.posts);
 
-      const postsPerPage = 2;
+      const postsPerPage = 10;
       setTotalPages(
         data.totalPages || Math.ceil(data.totalPosts / postsPerPage),
       );
@@ -138,7 +138,7 @@ export function Home() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView  style={styles.container}>
       <Text style={styles.title}>Fiap Blog Home</Text>
       <SearchBar onSearch={handleSearch} />
       {posts && posts.length > 0 ? (
@@ -182,6 +182,6 @@ export function Home() {
         <Text style={styles.noPostsText}>Nenhum post encontrado nesta página.</Text>
       )}
       
-    </View>
+    </ScrollView >
   );
 }
