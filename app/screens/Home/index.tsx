@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native'
 import { getPostsByPage } from '../../ApiStructure';
 import Post from '@/components/Home/Post';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 export type RootStackParamList = {
@@ -59,7 +60,7 @@ export function Home() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Fiap Blog Home</Text>
       <SearchBar onSearch={handleSearch} />
       <View style={styles.buttonContainer}>
@@ -72,7 +73,7 @@ export function Home() {
           <Post key={post.id} post={post} />
         </TouchableOpacity>
       ))}
-    </View>
+    </ScrollView>
   );
 }
 

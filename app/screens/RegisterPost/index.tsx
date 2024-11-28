@@ -15,13 +15,26 @@ export default function Register() {
     setError('');
     setSuccess(false);
 
+    const postData = {
+      title,
+      body,
+    };
+
     if (!title || !body) {
       return setError('Preencha todos os campos');
     }
 
     try {
+      const token = 'token';
+      if (!token) {
+        console.error("Token não encontrado no cookie!");
+        setLoading(false);
+        return;
+      }
       setLoading(true);
-      const { url, options } = createPost(title, body);
+      console.log('PostData:', postData);
+      console.log('Token:', token);
+      const { url, options } = createPost(postData, token);
       const response = await fetch(url, options);
       const json = await response.json();
       if (!json.success) {
