@@ -1,12 +1,11 @@
 // Home.tsx
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { SearchBar } from '../../../components/Home/SearchBar'; // Ajuste o caminho se necessário
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native'
 import { getPostsByPage } from '../../ApiStructure';
 import Post from '@/components/Home/Post';
-import { ScrollView } from 'react-native-gesture-handler';
 
 
 export type RootStackParamList = {

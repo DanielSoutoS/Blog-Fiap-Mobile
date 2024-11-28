@@ -1,16 +1,17 @@
 // SearchBar.tsx
 import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
+import { GlobalContext } from '../../app/contexts/GlobalContext';
 
 interface SearchBarProps {
   onSearch: (term: string) => void;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [term, setTerm] = React.useState('');
+  const { searchTerm, setSearchTerm } = React.useContext(GlobalContext);
+  // const [term, setTerm] = React.useState('');
 
   const handleChange = (text: string) => {
-    setTerm(text);
     onSearch(text);
   };
 
@@ -19,7 +20,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       <TextInput
         style={styles.input}
         placeholder="Pesquisar..."
-        value={term}
+        value={searchTerm}
         onChangeText={handleChange}
       />
     </View>
