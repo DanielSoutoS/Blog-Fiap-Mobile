@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getPostById } from "../../ApiStructure";
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../types';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export interface postInicial {
   id: number;
@@ -66,7 +67,7 @@ export default function ViewPost() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate('Home')}>
         <Icon name="arrow-left" style={styles.iconBack} />
       </TouchableOpacity>
@@ -76,7 +77,7 @@ export default function ViewPost() {
         {post.user.name}
       </Text>
       <Text style={styles.conteudo}>{post.body}</Text>
-    </View>
+    </ScrollView>
   );
 }
 
