@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
 import { userLogin, autoLogin } from '../ApiStructure';
-import { useRouter } from 'next/navigation';
+import { useNavigation } from '@react-navigation/native';
 
 export const GlobalContext = createContext();
 
@@ -13,8 +13,8 @@ export const GlobalProvider = ({ children }) => {
     const [currentPage, setCurrentPage] = React.useState(1);
     const [isSearching, setIsSearching] = React.useState(false);
     const [isHomeBack, setIsHomeBack] = React.useState(false);
-    const router = useRouter();
-    
+    const navigation = useNavigation();
+
     async function userLoginFunc(email, password) {
         setError(null);
         setLoading(true);
@@ -36,7 +36,7 @@ export const GlobalProvider = ({ children }) => {
           setData(userData);
           setLogged(true);
     
-          router.push('/');
+          navigation.navigate('Home');
         } catch (err) {
           toast.error('Erro ao fazer login!');
           setError(err.message);
@@ -52,7 +52,7 @@ export const GlobalProvider = ({ children }) => {
         setLogged(false);
         document.cookie = 'token=; path=/; max-age=0';
     
-        router.push('/login');
+        navigation.navigate('Login');
     }
     
     function getCookie(name) {
