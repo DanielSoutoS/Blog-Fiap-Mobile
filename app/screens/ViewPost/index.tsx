@@ -119,11 +119,11 @@ export default function ViewPost() {
       <Text style={styles.conteudo}>{post.body}</Text>
 
       <Text style={styles.commentsTitulo}>Comentários:</Text>
-      <View style={styles.commentContainer} >
+      <ScrollView style={styles.commentContainer} >
         {comments && comments.comments.rows.map((comment) => (
           <Comments key={comment.id} body={comment.body} />
         ))}
-      </View>
+      </ScrollView>
     </ScrollView>
   );
 }
