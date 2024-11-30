@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getComments, getPostById } from "../../ApiStructure";
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../types';
-import { ScrollView } from 'react-native-gesture-handler';
 import Comments from '@/components/Comments/Comments';
 
 export interface postInicial {
@@ -120,9 +119,11 @@ export default function ViewPost() {
       <Text style={styles.conteudo}>{post.body}</Text>
 
       <Text style={styles.commentsTitulo}>Comentários:</Text>
-      {comments && comments.comments.rows.map((comment) => (
-        <Comments key={comment.id} body={comment.body} />
-      ))}
+      <View style={styles.commentContainer} >
+        {comments && comments.comments.rows.map((comment) => (
+          <Comments key={comment.id} body={comment.body} />
+        ))}
+      </View>
     </ScrollView>
   );
 }
@@ -162,6 +163,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   commentsTitulo: {
+    color: '#1b4d3e',
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
@@ -169,4 +171,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingTop: 10
   },
+  commentContainer: {
+    marginBottom: 30,
+  }
 });
