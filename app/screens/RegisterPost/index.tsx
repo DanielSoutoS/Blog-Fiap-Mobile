@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import { createPost } from '../../ApiStructure';
 import { useNavigation } from '@react-navigation/native';
 
@@ -27,13 +35,11 @@ export default function Register() {
     try {
       const token = 'token';
       if (!token) {
-        console.error("Token não encontrado no cookie!");
+        console.error('Token não encontrado no cookie!');
         setLoading(false);
         return;
       }
       setLoading(true);
-      console.log('PostData:', postData);
-      console.log('Token:', token);
       const { url, options } = createPost(postData, token);
       const response = await fetch(url, options);
       const json = await response.json();
@@ -50,11 +56,11 @@ export default function Register() {
 
       navigation.navigate('Home');
     } catch (error) {
-        if (error instanceof Error) {
-            setError(error.message);
-          } else {
-            setError('Ocorreu um erro desconhecido.');
-          }
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Ocorreu um erro desconhecido.');
+      }
     } finally {
       setLoading(false);
     }
@@ -64,7 +70,11 @@ export default function Register() {
     <View style={styles.container}>
       <Text style={styles.title}>Cadastrar Post</Text>
 
-      {success && <Text style={styles.successMessage}>Usuário registrado com sucesso!</Text>}
+      {success && (
+        <Text style={styles.successMessage}>
+          Usuário registrado com sucesso!
+        </Text>
+      )}
 
       <TextInput
         style={styles.input}
@@ -76,21 +86,29 @@ export default function Register() {
       <TextInput
         style={styles.input}
         placeholder="Conteúdo"
-        multiline={true} 
+        multiline={true}
         numberOfLines={10}
         value={body}
         onChangeText={setBody}
         editable={!loading}
       />
 
-      <TouchableOpacity style={styles.registerButton} onPress={handleSubmit} disabled={loading}>
-        {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.registerButtonText}>Cadastrar Post</Text>}
+      <TouchableOpacity
+        style={styles.registerButton}
+        onPress={handleSubmit}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#FFF" />
+        ) : (
+          <Text style={styles.registerButtonText}>Cadastrar Post</Text>
+        )}
       </TouchableOpacity>
 
       {error && <Text style={styles.errorMessage}>{error}</Text>}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -100,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   iconBack: {
-    color:"#2F4F4F",
+    color: '#2F4F4F',
     fontSize: 26,
     paddingBottom: 15,
   },
