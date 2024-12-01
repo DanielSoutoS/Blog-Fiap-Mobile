@@ -33,7 +33,7 @@ const Menu = () => {
       <Modal
         transparent
         visible={visible}
-        animationType="fade" // Adicione uma animação se desejar
+        animationType="fade"
       >
         {/* Aqui usamos TouchableWithoutFeedback */}
         <TouchableWithoutFeedback onPress={() => setVisible(false)}>

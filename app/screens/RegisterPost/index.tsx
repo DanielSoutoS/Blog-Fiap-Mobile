@@ -32,8 +32,6 @@ export default function Register() {
         return;
       }
       setLoading(true);
-      console.log('PostData:', postData);
-      console.log('Token:', token);
       const { url, options } = createPost(postData, token);
       const response = await fetch(url, options);
       const json = await response.json();
@@ -64,7 +62,7 @@ export default function Register() {
     <View style={styles.container}>
       <Text style={styles.title}>Cadastrar Post</Text>
 
-      {success && <Text style={styles.successMessage}>Usuário registrado com sucesso!</Text>}
+      {success && <Text style={styles.successMessage}>Post registrado com sucesso!</Text>}
 
       <TextInput
         style={styles.input}
