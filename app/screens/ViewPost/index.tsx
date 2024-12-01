@@ -6,6 +6,7 @@ import { getComments, getPostById } from "../../ApiStructure";
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../types';
 import Comments from '@/components/Comments/Comments';
+import AddComments from '@/components/Comments/AddComments';
 
 export interface postInicial {
   id: number;
@@ -106,6 +107,22 @@ export default function ViewPost() {
     return <Text>Nenhuma notícia encontrada.</Text>;
   }
 
+  const handleCommentPosted = (newComment: CommentsObject['comments']['rows'][0]) => {
+    setComments((prevComments) => {
+      if (!prevComments) return prevComments;
+  
+      return {
+        ...prevComments,
+        comments: {
+          ...prevComments.comments,
+          rows: [...prevComments.comments.rows, newComment],
+          count: prevComments.comments.count + 1,
+        },
+      };
+    });
+  };
+  
+
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate('Home')}>
@@ -117,8 +134,8 @@ export default function ViewPost() {
         {post.user.name}
       </Text>
       <Text style={styles.conteudo}>{post.body}</Text>
-
       <Text style={styles.commentsTitulo}>Comentários:</Text>
+      <AddComments CommentObject={{ postId: post.id, onCommentPosted:handleCommentPosted }} />
       <ScrollView style={styles.commentContainer} >
         {comments && comments.comments.rows.map((comment) => (
           <Comments key={comment.id} body={comment.body} />
