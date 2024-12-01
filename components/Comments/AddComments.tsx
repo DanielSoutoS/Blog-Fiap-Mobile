@@ -25,6 +25,8 @@ const AddComments = ({ CommentObject }: { CommentObject: CommentObject }) => {
     setError('');
     setSuccess(false);
 
+    console.log('dentro function')
+
     try {
       const token = 'token';
       if (!token) {
@@ -34,6 +36,7 @@ const AddComments = ({ CommentObject }: { CommentObject: CommentObject }) => {
       const { url, options } = commentPost(CommentObject.postId, text, token);
       const response = await fetch(url, options);
       const data = await response.json();
+      console.log(data)
       CommentObject.onCommentPosted(data)
       setText('');
     } catch (error) {
@@ -67,10 +70,11 @@ const AddComments = ({ CommentObject }: { CommentObject: CommentObject }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
+    flexDirection: 'column',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   iconPlus: {
     color:"#2F4F4F",
@@ -78,6 +82,8 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   input: {
+    flex: 1,
+    marginRight: 10,
     backgroundColor: '#fff',
     padding: 10,
     marginBottom: 10,
