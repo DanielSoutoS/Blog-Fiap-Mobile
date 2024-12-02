@@ -7,6 +7,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../types';
 import Comments from '@/components/Comments/Comments';
 import AddComments from '@/components/Comments/AddComments';
+import { GlobalContext } from '@/app/contexts/GlobalContext';
 
 export interface postInicial {
   id: number;
@@ -42,6 +43,7 @@ export interface CommentsObject {
 export default function ViewPost() {
   const [post, setPost] = useState<postInicial | null>(null);
   const [comments, setComments] = useState<CommentsObject | null>(null);
+  const { getCookie } = React.useContext(GlobalContext);
   const [loading, setLoading] = useState(true);
   const route = useRoute();
   const { post: postInicial } = route.params as { post: postInicial | any };
@@ -78,7 +80,7 @@ export default function ViewPost() {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const token = 'token';
+        const token = await getCookie('token');
         if (!token) {
           console.error("Token não encontrado no cookie!");
           setLoading(false);
