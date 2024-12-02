@@ -1,4 +1,4 @@
-export const API_URL = `http://localhost:8089`;
+export const API_URL = `http://26.53.167.136:8089`;
 // Função para pegar os posts por página
 export function getPostsByPage(page = 1) {
   return {

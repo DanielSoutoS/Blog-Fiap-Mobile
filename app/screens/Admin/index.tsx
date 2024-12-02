@@ -1,230 +1,356 @@
-// ADAPTAR PARA O PROJETO
+import React from 'react';
+import {
+  Text,
+  View,
+  TextInput,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import { GlobalContext } from '@/app/contexts/GlobalContext';
+import { getUsersByPage, updateUser } from '@/app/ApiStructure';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 
-// 'use client';
-// import React from 'react';
-// import { getUsersByPage } from '@/app/ApiStructure';
-// import { UserContext } from '@/app/contexts/UserContext';
-// import styles from '@/app/css/pages/Admin.module.css';
-// import { updateUser } from '@/app/ApiStructure';
-// import { toast } from 'react-toastify';
+interface User {
+  active: boolean;
+  createdAt: string;
+  email: string;
+  id: number;
+  name: string;
+  updatedAt: string;
+  role: string;
+  password?: string;
+}
 
-// const Page = () => {
-//   const [users, setUsers] = React.useState([]);
-//   const [originalUsers, setOriginalUsers] = React.useState([]);
-//   const [totalUsers, setTotalUsers] = React.useState(0);
+const UsersTable = ({
+  users,
+  originalUsers,
+  updateData,
+  updateUsers,
+}: {
+  users: User[];
+  originalUsers: User[];
+  updateData: (userId: number, field: string, newValue: string) => void;
+  updateUsers: (userId: number) => void;
+}) => {
+  const roles = ['Student', 'Professor', 'Admin'];
 
-//   const [page, setPage] = React.useState(1);
-//   const [limit, setLimit] = React.useState(10);
-//   const { getCookie } = React.useContext(UserContext);
-//   const token = getCookie('token');
+  return (
+    <ScrollView style={tableStyles.table}>
+      {users.map((user) => {
+        const originalUser = originalUsers.find((u) => u.id === user.id);
+        const hasChanges = originalUser
+          ? (Object.keys(user) as (keyof User)[]).some(
+              (key) => user[key] !== originalUser[key],
+            )
+          : false;
 
-//   // Função para obter os usuários
-//   async function getUsers(page, limit) {
-//     try {
-//       const { url, options } = getUsersByPage(page, limit, token);
-//       const response = await fetch(url, options);
-//       const json = await response.json();
-//       if (!json.success) {
-//         throw new Error(json.message);
-//       }
-//       setUsers(json.users.users);
-//       setTotalUsers(json.users.totalItems);
-//       // Faça uma cópia profunda dos dados originais
-//       setOriginalUsers(JSON.parse(JSON.stringify(json.users.users)));
-//     } catch (error) {
-//       console.error(error);
-//       toast.error('Erro ao buscar usuários!');
-//     }
-//   }
+        return (
+          <View key={`user-${user.id}`} style={tableStyles.container}>
+            <TextInput
+              style={[tableStyles.input, tableStyles.disabledInput]}
+              placeholder="Id"
+              value={user.id.toString()}
+              editable={false}
+            />
+            <TextInput
+              style={[tableStyles.input]}
+              placeholder="Name"
+              value={user.name}
+              onChangeText={(text) => updateData(user.id, 'name', text)}
+            />
+            <TextInput
+              style={[tableStyles.input]}
+              placeholder="Email"
+              value={user.email}
+              onChangeText={(text) => updateData(user.id, 'email', text)}
+            />
+            <TextInput
+              style={[tableStyles.input]}
+              placeholder="********"
+              onChangeText={(text) => updateData(user.id, 'password', text)}
+            />
+            <View style={tableStyles.radioButtonsDiv}>
+              {roles.map((r) => (
+                <TouchableOpacity
+                  key={r}
+                  style={[
+                    tableStyles.radioButton,
+                    user.role === r.toLocaleLowerCase() &&
+                      tableStyles.selectedRadioButton,
+                  ]}
+                  onPress={
+                    user.role === r.toLocaleLowerCase()
+                      ? () => {}
+                      : () => updateData(user.id, 'role', r.toLocaleLowerCase())
+                  }
+                >
+                  <Text style={tableStyles.radioButtonText}>{r}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity
+              onPress={() => updateUsers(user.id)}
+              disabled={!hasChanges}
+            >
+              <Text
+                style={[
+                  tableStyles.updateButton,
+                  !hasChanges && {
+                    opacity: 0.5,
+                    cursor: 'not-allowed',
+                    backgroundColor: 'gray',
+                  },
+                ]}
+              >
+                Update
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
+      })}
+    </ScrollView>
+  );
+};
 
-//   // useEffect que é acionado quando 'page' ou 'limit' mudam
-//   React.useEffect(() => {
-//     getUsers(page, limit);
-//   }, [page, limit, token]);
+export default function Admin() {
+  const { getCookie } = React.useContext(GlobalContext);
+  const [users, setUsers] = React.useState<User[]>([]);
+  const [originalUsers, setOriginalUsers] = React.useState<User[]>([]);
+  const [totalUsers, setTotalUsers] = React.useState(0);
+  const [page, setPage] = React.useState(1);
 
-//   // Calcula o total de páginas
-//   const totalPages = Math.ceil(totalUsers / limit);
+  async function getUsers() {
+    try {
+      const token = await getCookie('token');
 
-//   // Atualiza 'page' caso ultrapasse o número total de páginas
-//   React.useEffect(() => {
-//     if (page > totalPages && totalPages > 0) {
-//       setPage(totalPages);
-//     }
-//   }, [totalUsers, limit]);
+      if (!token) {
+        return;
+      }
 
-//   function updateData(userId, field, newValue) {
-//     setUsers(
-//       users.map((user) =>
-//         user.id === userId ? { ...user, [field]: newValue } : user,
-//       ),
-//     );
-//   }
+      const { url, options } = getUsersByPage(page, 10, token);
+      const response = await fetch(url, options);
+      const json = await response.json();
+      if (!json.success) {
+        throw new Error(json.message);
+      }
 
-//   async function updateUsers(userId) {
-//     const toUpdateUser = users.find((u) => u.id === userId);
-//     const originalUser = originalUsers.find((u) => u.id === userId);
+      setUsers(json.users.users);
+      setTotalUsers(json.users.totalItems);
+      setOriginalUsers(JSON.parse(JSON.stringify(json.users.users)));
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-//     const changedFields = {};
-//     for (const key in toUpdateUser) {
-//       if (toUpdateUser[key] !== originalUser[key]) {
-//         changedFields[key] = toUpdateUser[key];
-//       }
-//     }
+  React.useEffect(() => {
+    getUsers();
+  }, [page]);
 
-//     // Verifique se há campos para atualizar
-//     if (Object.keys(changedFields).length === 0) {
-//       return;
-//     }
+  // Calcula o total de páginas
+  const totalPages = Math.ceil(totalUsers / 10);
 
-//     try {
-//       const { url, options } = updateUser(userId, changedFields, token);
-//       const response = await fetch(url, options);
-//       const json = await response.json();
-//       if (!json.success) {
-//         throw new Error(json.message);
-//       }
-//       // Atualize os dados originais com os novos valores
-//       setOriginalUsers((prevOriginalUsers) =>
-//         prevOriginalUsers.map((u) =>
-//           u.id === userId ? { ...u, ...changedFields } : u,
-//         ),
-//       );
+  // Atualiza 'page' caso ultrapasse o número total de páginas
+  React.useEffect(() => {
+    if (page > totalPages && totalPages > 0) {
+      setPage(totalPages);
+    }
+  }, [totalUsers, 10]);
 
-//       toast.success('Usuário atualizado com sucesso!');
-//     } catch (error) {
-//       console.error(error);
-//       toast.error('Erro ao atualizar usuário!');
-//     }
-//   }
+  function updateData(userId: number, field: string, newValue: string) {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.id === userId ? { ...user, [field]: newValue } : user,
+      ),
+    );
+  }
 
-//   return (
-//     <section className={styles.adminPage}>
-//       <h2>Administração de usuários</h2>
+  async function updateUsers(userId: number) {
+    const toUpdateUser = users.find((u) => u.id === userId);
+    const originalUser = originalUsers.find((u) => u.id === userId);
 
-//       {/* Controles de limite de itens por página */}
-//       <div>
-//         <label>
-//           Itens por página:
-//           <select
-//             value={limit}
-//             onChange={(e) => {
-//               setLimit(Number(e.target.value));
-//               setPage(1);
-//             }}
-//           >
-//             <option value={5}>5</option>
-//             <option value={10}>10</option>
-//             <option value={20}>20</option>
-//             <option value={50}>50</option>
-//             <option value={100}>100</option>
-//           </select>
-//         </label>
-//       </div>
+    if (!toUpdateUser || !originalUser) {
+      console.error('Usuário não encontrado.');
+      return;
+    }
 
-//       {/* Controles de paginação */}
-//       <div>
-//         <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-//           Anterior
-//         </button>
-//         <span className={styles["paginacao-usuarios"]}>
-//           Página {page} de {totalPages}
-//         </span>
-//         <button disabled={page >= totalPages} onClick={() => setPage(page + 1)}>
-//           Próxima
-//         </button>
-//       </div>
+    const changedFields: { [key: string]: any } = {};
 
-//       <div className={styles["usuarios-cadastrados"]}>Total de usuários cadastrados: {totalUsers}</div>
+    for (const key of Object.keys(toUpdateUser) as (keyof User)[]) {
+      const newValue = toUpdateUser[key];
+      const oldValue = originalUser[key];
 
-//       {users && (
-//         <table>
-//           <thead>
-//             <tr>
-//               <th>ID</th>
-//               <th>Nome</th>
-//               <th>Email</th>
-//               <th>Password</th>
-//               <th>Role</th>
-//               <th>Acionar</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {users.map((user) => {
-//               const originalUser = originalUsers.find((u) => u.id === user.id);
-//               const hasChanges = originalUser
-//                 ? Object.keys(user).some(
-//                     (key) => user[key] !== originalUser[key],
-//                   )
-//                 : false;
+      if (newValue !== oldValue) {
+        changedFields[key] = newValue as User[keyof User]; // Coerção explícita
+      }
+    }
 
-//               return (
-//                 <tr key={`user-${user.id}`}>
-//                   <td>
-//                     <input type="text" disabled value={user.id} />
-//                   </td>
-//                   <td>
-//                     <input
-//                       onChange={(event) =>
-//                         updateData(user.id, 'name', event.target.value)
-//                       }
-//                       type="text"
-//                       value={user.name}
-//                     />
-//                   </td>
-//                   <td>
-//                     <input
-//                       onChange={(event) =>
-//                         updateData(user.id, 'email', event.target.value)
-//                       }
-//                       type="text"
-//                       value={user.email}
-//                     />
-//                   </td>
-//                   <td>
-//                     <input
-//                       onChange={(event) =>
-//                         updateData(user.id, 'password', event.target.value)
-//                       }
-//                       type="text"
-//                       placeholder="*******"
-//                       value={user.password}
-//                     />
-//                   </td>
-//                   <td>
-//                     <select
-//                       value={user.role}
-//                       className={`select ${
-//                         user.role === 'admin'
-//                           ? styles.adminRole
-//                           : user.role === 'professor'
-//                           ? styles.professorRole
-//                           : styles.studentRole
-//                       }`}
-//                       onChange={(event) =>
-//                         updateData(user.id, 'role', event.target.value)
-//                       }
-//                     >
-//                       <option value="student">Student</option>
-//                       <option value="professor">Professor</option>
-//                       <option value="admin">Admin</option>
-//                     </select>
-//                   </td>
-//                   <td>
-//                     <button
-//                       onClick={() => updateUsers(user.id)}
-//                       disabled={!hasChanges}
-//                     >
-//                       Atualizar
-//                     </button>
-//                   </td>
-//                 </tr>
-//               );
-//             })}
-//           </tbody>
-//         </table>
-//       )}
-//     </section>
-//   );
-// };
+    // Verifique se há campos para atualizar
+    if (Object.keys(changedFields).length === 0) {
+      return;
+    }
 
-// export default Page;
+    try {
+      const token = await getCookie('token');
+      const { url, options } = updateUser(userId, changedFields, token);
+      const response = await fetch(url, options);
+      const json = await response.json();
+      if (!json.success) {
+        throw new Error(json.message);
+      }
+      // Atualize os dados originais com os novos valores
+      setOriginalUsers((prevOriginalUsers) =>
+        prevOriginalUsers.map((u) =>
+          u.id === userId ? { ...u, ...changedFields } : u,
+        ),
+      );
+
+      console.log('Usuário atualizado com sucesso!');
+
+      Alert.alert('Usuário atualizado com sucesso!');
+    } catch (error) {
+      console.error(error);
+      console.log('Erro ao atualizar usuário!');
+      Alert.alert('Erro ao atualizar usuário!');
+    }
+  }
+
+  return (
+    <GestureHandlerRootView>
+      <View style={styles.container}>
+        <Text style={styles.text}>Administração de usuários</Text>
+        <View style={styles.navigationContainer}>
+          <TouchableOpacity
+            style={[styles.navigationButton, page <= 1 && { opacity: 0.5 }]}
+            disabled={page <= 1}
+            onPress={() => {
+              if (page > 1) setPage(page - 1);
+            }}
+          >
+            <Text style={[styles.buttonText, page === 1 && { opacity: 0.5 }]}>
+              {' '}
+              Anterior
+            </Text>
+          </TouchableOpacity>
+          <Text style={{ fontSize: 16 }}>
+            Página {page} de {totalPages}
+          </Text>
+          <TouchableOpacity
+            style={[
+              styles.navigationButton,
+              page === totalPages && { opacity: 0.5 },
+            ]}
+            disabled={page === totalPages}
+            onPress={() => {
+              if (page < totalPages) setPage(page + 1);
+            }}
+          >
+            <Text
+              style={[
+                styles.buttonText,
+                page === totalPages && { opacity: 0.5 },
+              ]}
+            >
+              Próxima
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={{ fontSize: 16, marginTop: 20 }}>
+          Total de usuários cadastrados: {totalUsers}
+        </Text>
+
+        <UsersTable
+          users={users}
+          originalUsers={originalUsers}
+          updateData={updateData}
+          updateUsers={updateUsers}
+        />
+      </View>
+    </GestureHandlerRootView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#f5f5f5',
+  },
+  text: {
+    color: '#307c4b',
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
+  navigationContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '70%',
+    marginTop: 20,
+  },
+  navigationButton: {
+    backgroundColor: '#2f855a', // Verde escuro
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: '#fff',
+  },
+});
+
+const tableStyles = StyleSheet.create({
+  table: {
+    width: '100%',
+    display: 'flex',
+  },
+  container: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    marginBottom: 40,
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 10,
+    paddingLeft: 10,
+  },
+  disabledInput: {
+    backgroundColor: '#cccccc',
+  },
+  radioButtonsDiv: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 10,
+    width: '100%',
+  },
+  radioButton: {
+    backgroundColor: '#a8d3b7',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+  },
+  selectedRadioButton: {
+    backgroundColor: '#307c4b',
+    cursor: 'default',
+  },
+  updateButton: {
+    backgroundColor: '#a8d3b7',
+    width: '30%',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    color: '#fff',
+    cursor: 'pointer',
+    marginTop: 20,
+  },
+});
