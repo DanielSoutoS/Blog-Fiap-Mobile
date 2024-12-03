@@ -55,13 +55,7 @@ export default function ViewPost() {
   useEffect(() => {
     const fetchPostDetalhes = async () => {
       try {
-        const token = await getCookie('token');
-        // console.log(token)
-        if (!token) {
-          console.error("Token não encontrado no cookie!");
-          setLoading(false);
-          return;
-        }
+        const token = await getCookie('token') || 'token';
         if (postInicial) { 
           setPost(postInicial);
           setLoading(false);
@@ -83,13 +77,8 @@ export default function ViewPost() {
 
 const fetchComments = async () => {
       try {
-        const token = await getCookie('token');
-        console.log(token);
-        if (!token) {
-          console.error("Token não encontrado no cookie!");
-          setLoading(false);
-          return;
-        }
+        const token = await getCookie('token') || 'token';
+      
         const { url } = await getComments(postInicial?.id, 1, token);
         const response = await fetch(url);
         const data = await response.json();
