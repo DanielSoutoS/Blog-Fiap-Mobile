@@ -11,8 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 import { GlobalContext } from '@/app/contexts/GlobalContext';
 export default function Login() {
   const { userLoginFunc } = React.useContext(GlobalContext);
-  const [username, setUsername] = useState('pedro@gmail.com');
-  const [password, setPassword] = useState('123');
+  const [username, setUsername] = useState('admin@gmail.com');
+  const [password, setPassword] = useState('admin');
   const [error, setError] = useState('');
   const navigation = useNavigation();
 

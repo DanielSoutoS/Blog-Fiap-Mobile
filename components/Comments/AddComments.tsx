@@ -2,6 +2,8 @@ import React from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { commentPost } from '@/app/ApiStructure';
+import { GlobalContext } from '@/app/contexts/GlobalContext';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export interface Comment { 
   id: number; 
@@ -20,15 +22,13 @@ const AddComments = ({ CommentObject }: { CommentObject: CommentObject }) => {
   const [text, setText] = React.useState('');
   const [error, setError] = React.useState('');
   const [success, setSuccess] = React.useState(false);
-
+  const { getCookie } = React.useContext(GlobalContext);
   const handleSubmit = async () => {
     setError('');
     setSuccess(false);
 
-    console.log('dentro function')
-
     try {
-      const token = 'token';
+      const token = await getCookie('token');
       if (!token) {
         console.error("Token não encontrado no cookie!");
         return;

@@ -43,7 +43,7 @@ export interface CommentsObject {
 export default function ViewPost() {
   const [post, setPost] = useState<postInicial | null>(null);
   const [comments, setComments] = useState<CommentsObject | null>(null);
-  const { getCookie } = React.useContext(GlobalContext);
+  const { getCookie, data, logged } = React.useContext(GlobalContext);
   const [loading, setLoading] = useState(true);
   const route = useRoute();
   const { post: postInicial } = route.params as { post: postInicial | any };
@@ -52,7 +52,8 @@ export default function ViewPost() {
   useEffect(() => {
     const fetchPostDetalhes = async () => {
       try {
-        const token = 'token';
+        const token = await getCookie('token');
+        // console.log(token)
         if (!token) {
           console.error("Token não encontrado no cookie!");
           setLoading(false);
@@ -77,10 +78,10 @@ export default function ViewPost() {
     fetchPostDetalhes();
   }, [postInicial]);
 
-  useEffect(() => {
-    const fetchComments = async () => {
+const fetchComments = async () => {
       try {
         const token = await getCookie('token');
+        console.log(token);
         if (!token) {
           console.error("Token não encontrado no cookie!");
           setLoading(false);
@@ -95,7 +96,10 @@ export default function ViewPost() {
         console.error("Erro ao buscar comentários:", error);
         setLoading(false);
       }
-    }
+    }    
+
+  useEffect(() => {
+    
     if (postInicial) {
       fetchComments();
     }
@@ -110,6 +114,8 @@ export default function ViewPost() {
   }
 
   const handleCommentPosted = (newComment: CommentsObject['comments']['rows'][0]) => {
+    // console.log('newComment', newComment);
+    // console.log('comments', comments);
     setComments((prevComments) => {
       if (!prevComments) return prevComments;
   
@@ -117,7 +123,7 @@ export default function ViewPost() {
         ...prevComments,
         comments: {
           ...prevComments.comments,
-          rows: [...prevComments.comments.rows, newComment],
+          rows: newComment.comments.rows,
           count: prevComments.comments.count + 1,
         },
       };
@@ -137,7 +143,9 @@ export default function ViewPost() {
       </Text>
       <Text style={styles.conteudo}>{post.body}</Text>
       <Text style={styles.commentsTitulo}>Comentários:</Text>
-      <AddComments CommentObject={{ postId: post.id, onCommentPosted:handleCommentPosted }} />
+      {data && logged && (
+        <AddComments CommentObject={{ postId: post.id, onCommentPosted:handleCommentPosted }} />
+      )}
       <ScrollView style={styles.commentContainer} >
         {comments && comments.comments.rows.map((comment) => (
           <Comments key={comment.id} body={comment.body} />

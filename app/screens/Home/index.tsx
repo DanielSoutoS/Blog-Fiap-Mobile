@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native'
 import { getPostsByPage } from '../../ApiStructure';
 import Post from '@/components/Home/Post';
+import { GlobalContext } from '@/app/contexts/GlobalContext';
 
 
 export type RootStackParamList = {
@@ -33,6 +34,7 @@ export function Home() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [posts, setPosts] = React.useState([] as Post[]);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { data } = React.useContext(GlobalContext);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -63,9 +65,11 @@ export function Home() {
       <Text style={styles.title}>Fiap Blog Home</Text>
       <SearchBar onSearch={handleSearch} />
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('RegisterPost')} style={styles.newPostButton}>
+        {data && (data.role === 'admin' || data.role === 'professor') && (
+          <TouchableOpacity onPress={() => navigation.navigate('RegisterPost')} style={styles.newPostButton}>
           <Text style={styles.buttonText}>Cadastrar Post</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        )}
       </View>
       {posts.map((post) => (
         <TouchableOpacity key={post.id} onPress={() => handlePress(post)}>
