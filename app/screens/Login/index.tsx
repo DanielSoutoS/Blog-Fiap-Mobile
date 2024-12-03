@@ -1,35 +1,32 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  Text,
+  View,
+  TextInput,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { userLogin } from '../../ApiStructure';
-
+import { GlobalContext } from '@/app/contexts/GlobalContext';
 export default function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const { userLoginFunc } = React.useContext(GlobalContext);
+  const [username, setUsername] = useState('admin@gmail.com');
+  const [password, setPassword] = useState('admin');
   const [error, setError] = useState('');
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    const handleLoginFunc = async () => {
-      try {
-        const { url, options } = userLogin(username, password);
-        const response = await fetch(url, options);
-        const data = await response.json();
-        if (!data.success) {
-          throw new Error(data.message);
-        } else {
-          Alert.alert('Login bem-sucedido', 'Token armazenado com sucesso!');
-          navigation.navigate('Home');
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('Ocorreu um erro desconhecido.');
-        }
-      }
-    };
-    handleLoginFunc();
+  const handleLogin = async () => {
+    if (!username || !password) {
+      return;
+    }
+    const res = await userLoginFunc(username, password);
+    if (res.success) {
+      Alert.alert('Login bem-sucedido', 'Seja bem vindo!');
+      navigation.navigate('Home');
+    } else {
+      setError(res.message);
+    }
   };
 
   return (
@@ -48,18 +45,20 @@ export default function Login() {
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
-      
+
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.loginButtonText}>Entrar</Text>
       </TouchableOpacity>
 
       {error && <Text style={{ color: 'red', marginTop: 10 }}>{error}</Text>}
-      
-      <TouchableOpacity 
-        style={styles.linkText} 
+
+      <TouchableOpacity
+        style={styles.linkText}
         onPress={() => navigation.navigate('Register')}
       >
-        <Text style={styles.linkText}>Ainda não possui uma conta? Clique aqui</Text>
+        <Text style={styles.linkText}>
+          Ainda não possui uma conta? Clique aqui
+        </Text>
       </TouchableOpacity>
     </View>
   );

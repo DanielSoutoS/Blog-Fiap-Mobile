@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Modal,
   View,
@@ -11,12 +11,15 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../types';
+import { GlobalContext } from '@/app/contexts/GlobalContext';
 
 interface MenuProps {
   navigation: NavigationProp<any>;
 }
 
 const Menu = () => {
+  const { data, userLogout, logged } = React.useContext(GlobalContext);
+
   const [visible, setVisible] = useState(false);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
@@ -27,13 +30,16 @@ const Menu = () => {
           style={styles.image}
         />
       </TouchableOpacity>
+      {data && (
+        <Text style={styles.welcomeMessage}>Seja bem vindo, {data.name}!</Text>
+      )}
       <TouchableOpacity onPress={() => setVisible(true)}>
         <Icon name="currency-eth" size={26} color="#fff" />
       </TouchableOpacity>
       <Modal
         transparent
         visible={visible}
-        animationType="fade" // Adicione uma animação se desejar
+        animationType="fade"
       >
         {/* Aqui usamos TouchableWithoutFeedback */}
         <TouchableWithoutFeedback onPress={() => setVisible(false)}>
@@ -43,11 +49,25 @@ const Menu = () => {
                 <Text style={styles.menuItem}>Home</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text style={styles.menuItem}>Login</Text>
+                {!logged ? (
+                  <Text style={styles.menuItem}>Login</Text>
+                ) : (
+                  <Text
+                    style={styles.menuItem}
+                    onPress={() => {
+                      userLogout();
+                      navigation.navigate('Home');
+                    }}
+                  >
+                    Logout
+                  </Text>
+                )}
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate('Admin')}>
-                <Text style={styles.menuItem}>Admin</Text>
-              </TouchableOpacity>
+              {data && data.role === 'admin' && (
+                <TouchableOpacity onPress={() => navigation.navigate('Admin')}>
+                  <Text style={styles.menuItem}>Admin</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -83,6 +103,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     padding: 15,
+  },
+  welcomeMessage: {
+    color: 'white',
   },
 });
 

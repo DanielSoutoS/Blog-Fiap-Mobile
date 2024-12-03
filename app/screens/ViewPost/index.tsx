@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { getPostById } from "../../ApiStructure";
+import { getComments, getPostById } from "../../ApiStructure";
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../types';
-import { ScrollView } from 'react-native-gesture-handler';
+import Comments from '@/components/Comments/Comments';
+import AddComments from '@/components/Comments/AddComments';
+import { GlobalContext } from '@/app/contexts/GlobalContext';
 
 export interface postInicial {
   id: number;
@@ -22,9 +24,26 @@ export interface postInicial {
   createdAt: string;
 }
 
+export interface CommentsObject {
+  page: number;
+  post: number;
+  comments: {
+    count: number;
+    rows: {
+      id: number,
+      body: string,
+      active: boolean,
+      postId: number,
+      createdAt: Date
+    }[];
+  }
+}
+
 
 export default function ViewPost() {
   const [post, setPost] = useState<postInicial | null>(null);
+  const [comments, setComments] = useState<CommentsObject | null>(null);
+  const { getCookie, data, logged } = React.useContext(GlobalContext);
   const [loading, setLoading] = useState(true);
   const route = useRoute();
   const { post: postInicial } = route.params as { post: postInicial | any };
@@ -33,7 +52,8 @@ export default function ViewPost() {
   useEffect(() => {
     const fetchPostDetalhes = async () => {
       try {
-        const token = 'token';
+        const token = await getCookie('token');
+        // console.log(token)
         if (!token) {
           console.error("Token não encontrado no cookie!");
           setLoading(false);
@@ -58,6 +78,33 @@ export default function ViewPost() {
     fetchPostDetalhes();
   }, [postInicial]);
 
+const fetchComments = async () => {
+      try {
+        const token = await getCookie('token');
+        console.log(token);
+        if (!token) {
+          console.error("Token não encontrado no cookie!");
+          setLoading(false);
+          return;
+        }
+        const { url } = await getComments(postInicial?.id, 1, token);
+        const response = await fetch(url);
+        const data = await response.json();
+        setComments(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Erro ao buscar comentários:", error);
+        setLoading(false);
+      }
+    }    
+
+  useEffect(() => {
+    
+    if (postInicial) {
+      fetchComments();
+    }
+  }, [postInicial]);
+
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
@@ -65,6 +112,24 @@ export default function ViewPost() {
   if (!post) {
     return <Text>Nenhuma notícia encontrada.</Text>;
   }
+
+  const handleCommentPosted = (newComment: CommentsObject['comments']['rows'][0]) => {
+    // console.log('newComment', newComment);
+    // console.log('comments', comments);
+    setComments((prevComments) => {
+      if (!prevComments) return prevComments;
+  
+      return {
+        ...prevComments,
+        comments: {
+          ...prevComments.comments,
+          rows: newComment.comments.rows,
+          count: prevComments.comments.count + 1,
+        },
+      };
+    });
+  };
+  
 
   return (
     <ScrollView style={styles.container}>
@@ -77,6 +142,15 @@ export default function ViewPost() {
         {post.user.name}
       </Text>
       <Text style={styles.conteudo}>{post.body}</Text>
+      <Text style={styles.commentsTitulo}>Comentários:</Text>
+      {data && logged && (
+        <AddComments CommentObject={{ postId: post.id, onCommentPosted:handleCommentPosted }} />
+      )}
+      <ScrollView style={styles.commentContainer} >
+        {comments && comments.comments.rows.map((comment) => (
+          <Comments key={comment.id} body={comment.body} />
+        ))}
+      </ScrollView>
     </ScrollView>
   );
 }
@@ -113,5 +187,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     textAlign: 'justify',
+    paddingBottom: 30,
   },
+  commentsTitulo: {
+    color: '#1b4d3e',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    borderTopColor: '#ccc',
+    borderTopWidth: 1,
+    paddingTop: 10
+  },
+  commentContainer: {
+    marginBottom: 30,
+  }
 });
