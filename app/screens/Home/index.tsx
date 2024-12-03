@@ -36,7 +36,7 @@ export function Home() {
   const [posts, setPosts] = React.useState([] as Post[]);
   const [totalPages, setTotalPages] = React.useState(1);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { searchTerm, isSearching, setIsSearching, setSearchTerm, setCurrentPage, currentPage, data, getCookie } = React.useContext(GlobalContext);
+  const { searchTerm, isSearching, setIsSearching, setSearchTerm, setCurrentPage, currentPage, data, getCookie, logged } = React.useContext(GlobalContext);
   const [selectedPost, setSelectedPost] = React.useState<Post | null>(null);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [editModalVisible, setEditModalVisible] = React.useState(false);
@@ -164,11 +164,13 @@ export function Home() {
     <ScrollView  style={styles.container}>
       <Text style={styles.title}>Fiap Blog Home</Text>
       <SearchBar onSearch={handleSearch} />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('RegisterPost')} style={styles.newPostButton}>
-          <Text style={styles.buttonText}>Cadastrar Post</Text>
-        </TouchableOpacity>
-      </View>
+      {data && logged && (data.role === 'professor' || data.role === 'admin') && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('RegisterPost')} style={styles.newPostButton}>
+            <Text style={styles.buttonText}>Cadastrar Post</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       {posts && posts.length > 0 ? (
         <>
         {posts.map((post) => (
