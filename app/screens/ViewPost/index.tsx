@@ -34,7 +34,10 @@ export interface CommentsObject {
       body: string,
       active: boolean,
       postId: number,
-      createdAt: Date
+      createdAt: Date,
+      user: {
+        name: string
+      }
     }[];
   }
 }
@@ -114,8 +117,6 @@ const fetchComments = async () => {
   }
 
   const handleCommentPosted = (newComment: CommentsObject['comments']['rows'][0]) => {
-    // console.log('newComment', newComment);
-    // console.log('comments', comments);
     setComments((prevComments) => {
       if (!prevComments) return prevComments;
   
@@ -148,7 +149,7 @@ const fetchComments = async () => {
       )}
       <ScrollView style={styles.commentContainer} >
         {comments && comments.comments.rows.map((comment) => (
-          <Comments key={comment.id} body={comment.body} />
+          <Comments key={comment.id} body={comment.body} user={comment.user.name} />
         ))}
       </ScrollView>
     </ScrollView>
