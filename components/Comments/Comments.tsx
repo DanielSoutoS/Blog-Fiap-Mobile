@@ -1,14 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface CommentsProps {
-  body: string
+  body: string,
+  user: string
 }
 
-const Comments: React.FC<CommentsProps> = ({ body }) => {
+const Comments: React.FC<CommentsProps> = ({ body, user }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.body}>{body}</Text>
+      <Text style={styles.writer}>
+         <Icon name="account-outline" style={styles.iconWriter} />
+         {user}
+      </Text>
     </View>
   );
 };
@@ -30,6 +36,18 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#333',
     marginVertical: 5,
+  },
+  writer: {
+    fontSize: 14,
+    lineHeight: 18,
+    color: '#006400',
+    marginBottom: 10,
+    marginTop: 10
+  },
+  iconWriter: {
+    fontSize: 14,
+    color: '#006400',
+    marginRight: 5
   }
 });
 

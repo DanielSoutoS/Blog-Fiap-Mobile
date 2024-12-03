@@ -2,90 +2,13 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, Alert, Button, TextInput } from 'react-native';
 import { SearchBar } from '../../../components/Home/SearchBar';
 import { useNavigation } from '@react-navigation/native';
-<<<<<<< HEAD
 import { NavigationProp } from '@react-navigation/native'
-import { getPostsByPage, getSearchPosts } from '../../ApiStructure';
+import { deletePost, getPostsByPage, getSearchPosts, updatePost } from '../../ApiStructure';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import Post from '@/components/Home/Post';
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-    backgroundColor: '#fff',
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#1b4d3e'
-  },
-  postsWrapper: {
-    paddingBottom: 20,
-  },
-  post: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  postText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  pagination: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  button: {
-    padding: 10,
-    backgroundColor: '#007BFF',
-    borderRadius: 5,
-  },
-  buttonContainer: {
-    display: 'flex',
-    alignItems: 'flex-end',
-  },
-  newPostButton: {
-    backgroundColor: '#2f855a', // Verde escuro
-    padding: 15,
-    borderRadius: 5,
-    maxWidth: 200,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  disabledButton: {
-    backgroundColor: '#ccc',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  paginationText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  noPostsText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 20,
-  },
-});
-=======
-import { NavigationProp } from '@react-navigation/native';
-import { getPostsByPage, deletePost, updatePost } from '../../ApiStructure';
-import Post from '@/components/Home/Post';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { GlobalContext } from '@/app/contexts/GlobalContext';
 
->>>>>>> fa665866748357d0db98a0d469d03aa542e95d16
+
 
 export type RootStackParamList = {
   ViewPost: {
@@ -111,10 +34,14 @@ export interface Post {
 
 export function Home() {
   const [posts, setPosts] = React.useState([] as Post[]);
-<<<<<<< HEAD
   const [totalPages, setTotalPages] = React.useState(1);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { searchTerm, isSearching, setIsSearching, setSearchTerm, setCurrentPage, currentPage, data } = React.useContext(GlobalContext);
+  const { searchTerm, isSearching, setIsSearching, setSearchTerm, setCurrentPage, currentPage, data, getCookie, logged } = React.useContext(GlobalContext);
+  const [selectedPost, setSelectedPost] = React.useState<Post | null>(null);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [editModalVisible, setEditModalVisible] = React.useState(false);
+  const [newTitle, setNewTitle] = React.useState('');
+  const [newBody, setNewBody] = React.useState('');
 
   const fetchPosts = async () => {
     try {
@@ -136,19 +63,7 @@ export function Home() {
     } catch (error) {
       console.error('Erro ao buscar posts:', error);
     }
-=======
-  const [selectedPost, setSelectedPost] = React.useState<Post | null>(null);
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const [editModalVisible, setEditModalVisible] = React.useState(false);
-  const [newTitle, setNewTitle] = React.useState('');
-  const [newBody, setNewBody] = React.useState('');
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { data, getCookie } = React.useContext(GlobalContext);
-
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
->>>>>>> fa665866748357d0db98a0d469d03aa542e95d16
-  };
+  }
 
   React.useEffect(() => {
     fetchPosts();
@@ -249,19 +164,42 @@ export function Home() {
     <ScrollView  style={styles.container}>
       <Text style={styles.title}>Fiap Blog Home</Text>
       <SearchBar onSearch={handleSearch} />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('RegisterPost')} style={styles.newPostButton}>
-          <Text style={styles.buttonText}>Cadastrar Post</Text>
-        </TouchableOpacity>
-      </View>
-<<<<<<< HEAD
+      {data && logged && (data.role === 'professor' || data.role === 'admin') && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('RegisterPost')} style={styles.newPostButton}>
+            <Text style={styles.buttonText}>Cadastrar Post</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       {posts && posts.length > 0 ? (
         <>
         {posts.map((post) => (
-          <TouchableOpacity key={post.id} onPress={() => handlePress(post)}>
-            <Post key={post.id} post={post} />
+        <View key={post.id} style={styles.postContainer}>
+          <TouchableOpacity onPress={() => handlePress(post)} style={styles.postContent}>
+            <Post post={post} />
           </TouchableOpacity>
-        ))}
+
+          {data && (data.role === 'professor' || data.role === 'admin') && (
+            <View style={styles.actionButtons}>
+              <TouchableOpacity
+                onPress={() => handleEditModalOpen(post)}
+                style={styles.editButton}
+              >
+                <Icon name="pencil" size={24} color="#007bff" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => {
+                  setSelectedPost(post);
+                  setModalVisible(true);
+                }}
+              >
+                <Icon name="delete" size={24} color="#dc3545" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      ))}
         <View style={styles.pagination}>
             <TouchableOpacity
               onPress={() => setCurrentPage((prev: number) => Math.max(prev - 1, 1))}
@@ -295,38 +233,6 @@ export function Home() {
       ): (
         <Text style={styles.noPostsText}>Nenhum post encontrado nesta página.</Text>
       )}
-      
-    </ScrollView >
-  );
-}
-=======
-      {posts.map((post) => (
-        <View key={post.id} style={styles.postContainer}>
-          <TouchableOpacity onPress={() => handlePress(post)} style={styles.postContent}>
-            <Post post={post} />
-          </TouchableOpacity>
-
-          {data && (data.role === 'professor' || data.role === 'admin') && (
-            <View style={styles.actionButtons}>
-              <TouchableOpacity
-                onPress={() => handleEditModalOpen(post)}
-                style={styles.editButton}
-              >
-                <Icon name="pencil" size={24} color="#007bff" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => {
-                  setSelectedPost(post);
-                  setModalVisible(true);
-                }}
-              >
-                <Icon name="delete" size={24} color="#dc3545" />
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-      ))}
       <Modal
         animationType="slide"
         transparent={true}
@@ -369,9 +275,10 @@ export function Home() {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+    </ScrollView >
   );
 }
+      
 
 const styles = StyleSheet.create({
   container: {
@@ -469,5 +376,40 @@ const styles = StyleSheet.create({
     height: 100,
     textAlignVertical: 'top',
   },
+  postsWrapper: {
+    paddingBottom: 20,
+  },
+  post: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  postText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  pagination: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: '#007BFF',
+    borderRadius: 5,
+  },
+  disabledButton: {
+    backgroundColor: '#ccc',
+  },
+  paginationText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  noPostsText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 20,
+  },
 });
->>>>>>> fa665866748357d0db98a0d469d03aa542e95d16
