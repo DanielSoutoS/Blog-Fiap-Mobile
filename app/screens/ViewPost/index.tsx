@@ -123,25 +123,27 @@ const fetchComments = async () => {
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-        <Icon name="arrow-left" style={styles.iconBack} />
-      </TouchableOpacity>
-      <Text style={styles.titulo}>{post.title}</Text> 
-      <Text style={styles.writer}>
-        <Icon name="fountain-pen-tip" style={styles.iconWriter} />
-        {post.user.name}
-      </Text>
-      <Text style={styles.conteudo}>{post.body}</Text>
-      <Text style={styles.commentsTitulo}>Comentários:</Text>
-      {data && logged && (
-        <AddComments CommentObject={{ postId: post.id, onCommentPosted:handleCommentPosted }} />
-      )}
+    <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+      <Icon name="arrow-left" style={styles.iconBack} />
+    </TouchableOpacity>
+    <Text style={styles.titulo}>{post.title}</Text> 
+    <Text style={styles.writer}>
+      <Icon name="fountain-pen-tip" style={styles.iconWriter} />
+      {post.user.name}
+    </Text>
+    <Text style={styles.conteudo}>{post.body}</Text>
+    {data && logged && <Text style={styles.commentsTitulo}>Comentários:</Text>}
+    {data && logged && (
+      <AddComments CommentObject={{ postId: post.id, onCommentPosted:handleCommentPosted }} />
+    )}
+    {data && logged && (
       <ScrollView style={styles.commentContainer} >
-        {comments && comments.comments.rows.map((comment) => (
-          <Comments key={comment.id} body={comment.body} user={comment.user.name} />
-        ))}
-      </ScrollView>
+      {comments && comments.comments.rows.map((comment) => (
+        <Comments key={comment.id} body={comment.body} user={comment.user.name} />
+      ))}
     </ScrollView>
+    )}
+  </ScrollView>
   );
 }
 

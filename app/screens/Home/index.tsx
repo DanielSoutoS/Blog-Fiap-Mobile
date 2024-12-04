@@ -42,6 +42,7 @@ export function Home() {
   const [editModalVisible, setEditModalVisible] = React.useState(false);
   const [newTitle, setNewTitle] = React.useState('');
   const [newBody, setNewBody] = React.useState('');
+  const [modalMessage, setModalMessage] = React.useState('Tem certeza de que deseja excluir este post?');
 
   const fetchPosts = async () => {
     try {
@@ -98,17 +99,23 @@ export function Home() {
     try {
       const { url, options } = deletePost(selectedPost.id, token);
       const response = await fetch(url, options);
-
+  
       if (response.ok) {
         setPosts(posts.filter((post) => post.id !== selectedPost.id));
         Alert.alert('Post excluído com sucesso!');
+      // } else if (response.status === 403) {
+      //   // Atualiza a mensagem da modal para o caso de permissão negada
+      //   setModalMessage('Você não tem permissão para excluir este post.');
+      //   setModalVisible(true);
       } else {
+        console.log(setModalMessage)
+        setModalMessage('Você não tem permissão para excluir o post.');
+        setModalVisible(true);
         Alert.alert('Erro ao excluir o post.');
       }
     } catch (error) {
       console.error('Erro ao excluir post:', error);
-    } finally {
-      setModalVisible(false);
+      Alert.alert('Erro ao excluir o post.');
     }
   };
 
@@ -143,13 +150,12 @@ export function Home() {
           Alert.alert('Erro ao atualizar o post: dados incompletos');
         }
       } else {
-        Alert.alert('Erro ao atualizar o post.');
+        setEditModalVisible(false);        
+        setModalMessage('Você não tem permissão para editar o post.');
+        setModalVisible(true);
       }
     } catch (error) {
       console.error('Erro ao atualizar post:', error);
-      Alert.alert('Erro ao atualizar o post.');
-    } finally {
-      setEditModalVisible(false);
     }
   };
   
@@ -240,10 +246,12 @@ export function Home() {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>Tem certeza de que deseja excluir este post?</Text>
+          <Text style={styles.modalText}>{modalMessage}</Text>
           <View style={styles.modalButtons}>
             <Button title="Cancelar" onPress={() => setModalVisible(false)} color="#6c757d" />
-            <Button title="Confirmar" onPress={handleDelete} color="#dc3545" />
+            {modalMessage === 'Tem certeza de que deseja excluir este post?' && (
+              <Button title="Confirmar" onPress={handleDelete} color="#dc3545" />
+            )}
           </View>
         </View>
       </Modal>
@@ -413,3 +421,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
+function setModalMessage(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+
