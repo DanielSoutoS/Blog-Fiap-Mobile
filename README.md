@@ -55,7 +55,6 @@ git  clone  git  clone  https://github.com/oPedroFlores/fiap-project.git
   
 
 ### Passo :one:: Clonar o repositório
-
   
 
 Clone este repositório para sua máquina local. Para clonar, clique no botão "Clone" acima ou no terminal execute o seguinte comando:
@@ -166,11 +165,11 @@ Ao retornar ao endereço [http://localhost:8081](http://localhost:8081) será po
 
 - Crie um título (Title) bem como um corpo de texto (Body)
 
-- Clique em 'Create Post'
+- Crie o post
 
   
 
-Você verá a mensagem "Post criado com sucesso!"
+Você verá o post cadastrado com sucesso.
 
 <br>
 
@@ -184,7 +183,7 @@ Você poderá verificar o Post criado, bem como os demais ao retornar à tab "Ho
 
 - Clique na tab 'Home'. Nela é possível visualizar os posts com menor número de caracteres.
 
-- Para visualizar os posts com maior volume de caracteres clique em "Leia mais" no componente do post em questão
+- Para visualizar os posts com maior volume de caracteres clique no post em questão
 
   
 
@@ -200,17 +199,13 @@ Você poderá verificar o Post criado, bem como os demais ao retornar à tab "Ho
 
 ### Passo :eight:: Explore a tab de detalhes do post
 
-  
-
-Nesta página é possível engajar com o Post, bem como realizar comentários. Os usuários com o perfil (role) igual a "professor" poderão apagar comentários. Quando aplicável
+  Clique na barra de navegação, digite o texto (header ou body) desejado para buscar um post específico e clique em "pesquisar"
 
   
 
-Reaja clicando nos botões referentes à sua intenção e/ou apague posts que sejam pertinentes
+Observe que a aplicação filtrará os dados com base na busca realizada.
 
-  
 
-<br>
 
 <br>
 
@@ -218,11 +213,7 @@ Reaja clicando nos botões referentes à sua intenção e/ou apague posts que se
 
   
 
-Clique na barra de navegação, digite o texto (header ou body) desejado para buscar um post específico e clique em "pesquisar"
 
-  
-
-Observe que a aplicação filtrará os dados com base na busca realizada.
 
   
 
@@ -230,23 +221,7 @@ Observe que a aplicação filtrará os dados com base na busca realizada.
 
 <br>
 
-### Passo :keycap_ten:: Explore a paginação
 
-  
-
-É possível visualizar até 10 posts por página. Ao cirar o 11º post, poderemos encontrar o post mais antigo na 2ª página. Para visualizá-lo:
-
-  
-
-Clique em "Próxima" para navegar até a próxima página.
-
-  
-
-É possível visualizar até 10 posts por página. Ao cirar o 11º post, poderemos encontrar o post mais antigo na 2ª página. Para visualizá-lo:
-
-  
-
-Clique em "Próxima" para navegar até a próxima página.
 
 ***
 ## 🔒 Permissões de Usuários
@@ -256,23 +231,18 @@ Por padrão, o sistema cria um usuário admin com permissão "master" para geren
 
 ### Usuário não cadastrado
 :x: Criar posts <br>
-:x: Interagir com posts ou comentários <br>
-:x: Reagir aos posts <br>
 :white_check_mark: Ler posts <br>
 
 ### Aluno
 :x: Criar posts <br>
-:white_check_mark: Reagir aos posts <br>
-:white_check_mark: Criar e excluir seus próprios comentários <br>
+:white_check_mark: Criar comentários <br>
 
 ### Professor
 :white_check_mark: Criar, editar e excluir seus próprios posts <br>
-:white_check_mark: Interagir com posts e criar/excluir seus próprios comentários <br>
-:white_check_mark: Acesso à aba "Criar Post" <br>
+:white_check_mark: Criar comentários <br>
 
 ### Admin
-:white_check_mark: Interagir com posts e comentários <br>
-:white_check_mark: Acesso à aba "Criar Post" <br>
-:white_check_mark: Criar, editar e excluir todos os posts <br>
+:white_check_mark: Criar, editar e excluir seus próprios posts <br>
+:white_check_mark: Criar comentários <br>
 :white_check_mark: Acesso à aba "Admin" <br>
 :white_check_mark: Redefinir Nome, E-mail, Senha e Role de todos os usuários <br>

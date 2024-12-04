@@ -136,13 +136,11 @@ const fetchComments = async () => {
     {data && logged && (
       <AddComments CommentObject={{ postId: post.id, onCommentPosted:handleCommentPosted }} />
     )}
-    {data && logged && (
-      <ScrollView style={styles.commentContainer} >
-      {comments && comments.comments.rows.map((comment) => (
-        <Comments key={comment.id} body={comment.body} user={comment.user.name} />
-      ))}
+    <ScrollView style={styles.commentContainer} >
+        {comments && comments.comments.rows.map((comment) => (
+          <Comments key={comment.id} body={comment.body} user={comment.user.name} />
+        ))}
     </ScrollView>
-    )}
   </ScrollView>
   );
 }
