@@ -103,13 +103,10 @@ export function Home() {
       if (response.ok) {
         setPosts(posts.filter((post) => post.id !== selectedPost.id));
         Alert.alert('Post excluído com sucesso!');
-      // } else if (response.status === 403) {
-      //   // Atualiza a mensagem da modal para o caso de permissão negada
-      //   setModalMessage('Você não tem permissão para excluir este post.');
-      //   setModalVisible(true);
+        setModalVisible(false);
       } else {
         console.log(setModalMessage)
-        setModalMessage('Você não tem permissão para excluir o post.');
+        setModalMessage('Você não tem permissão para editar/excluir o post.');
         setModalVisible(true);
         Alert.alert('Erro ao excluir o post.');
       }
@@ -145,13 +142,14 @@ export function Home() {
             )
           );
           Alert.alert('Post atualizado com sucesso!');
+          setEditModalVisible(false); 
         } else {
           console.error('Dados incompletos na resposta da API');
           Alert.alert('Erro ao atualizar o post: dados incompletos');
         }
       } else {
         setEditModalVisible(false);        
-        setModalMessage('Você não tem permissão para editar o post.');
+        setModalMessage('Você não tem permissão para editar/excluir o post.');
         setModalVisible(true);
       }
     } catch (error) {
